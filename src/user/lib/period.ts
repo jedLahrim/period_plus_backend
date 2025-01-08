@@ -1,4 +1,4 @@
-import * as scales from './dates.json';
+import scales from './dates.json';
 
 interface PeriodResult {
   period: string;
