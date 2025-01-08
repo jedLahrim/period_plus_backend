@@ -16,6 +16,9 @@ export class Period {
   @Column({ type: 'simple-json' })
   periodDays: Date[];
 
+  @Column({ nullable: true, type: 'simple-json' })
+  ovulationDays: Date[];
+
   @Column('int')
   periodMonth: number;
 

@@ -1,0 +1,6 @@
+export enum BodyMassIndexStatus {
+  UNDERWEIGHT = 'UNDERWEIGHT',
+  NORMAL_WEIGHT = 'NORMAL_WEIGHT',
+  OVERWEIGHT = 'OVERWEIGHT',
+  OBESE = 'OBESE',
+}

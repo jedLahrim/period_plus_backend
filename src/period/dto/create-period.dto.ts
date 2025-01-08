@@ -1,4 +1,10 @@
-import { IsArray, IsDateString, IsInt, IsNotEmpty } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 
 export class CreatePeriodDto {
   @IsArray()
@@ -9,4 +15,9 @@ export class CreatePeriodDto {
   @IsInt()
   @IsNotEmpty()
   periodMonth: number;
+
+  @IsArray()
+  @IsDateString({}, { each: true })
+  @IsOptional()
+  ovulationDays: Date[];
 }

@@ -14,6 +14,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import * as jwt from 'jsonwebtoken';
 import { AttachmentService } from '../attachment/attachment.service';
+import { PeriodDto } from './dto/period.dto';
+import { calculatePeriodDates } from './lib/period';
+import { PeriodService } from '../period/period.service';
+import { ScaleData } from '../common/constant';
 
 @Injectable()
 export class UserService {
@@ -21,6 +25,7 @@ export class UserService {
     @InjectRepository(UserModel)
     private userRepository: Repository<UserModel>,
     private attachmentService: AttachmentService,
+    private periodService: PeriodService,
   ) {}
 
   // Create a new user (Register)
@@ -139,6 +144,63 @@ export class UserService {
       throw new NotFoundException('ERR_NOT_FOUND_USER');
     }
     return foundedUser;
+  }
+
+  async period(periodDto: PeriodDto, user: UserModel) {
+    const {
+      startDateOfLastPeriod,
+      durationOfLastPeriod,
+      avgCycleLength,
+      upComingMonth,
+    } = periodDto;
+    try {
+      const scale = ScaleData[avgCycleLength];
+      const results = calculatePeriodDates({
+        startDateOfLastPeriod: startDateOfLastPeriod.toDateString(),
+        durationOfLastPeriod,
+        avgCycleLength: scale,
+        upComingMonth,
+      });
+      const promise = results.map((result) => {
+        return this.periodService.createPeriod(
+          {
+            periodDays: this.getPeriodDays(result?.period),
+            periodMonth: this.getPeriodDays(result?.period)[0].getMonth() + 1,
+            ovulationDays: this.getPeriodDays(
+              result?.mostProbableOvulationDays,
+            ),
+          },
+          user,
+        );
+      });
+      return await Promise.all(promise);
+    } catch (e) {
+      throw new ConflictException({
+        message: 'Error Period Calculation',
+        error: e,
+      });
+    }
+  }
+
+  getPeriodDays(period: string) {
+    let startDateStr: string;
+    let endDateStr: string;
+    [startDateStr, endDateStr] = period.split(' - ');
+    if (new Date(startDateStr) > new Date(endDateStr)) {
+      [endDateStr, startDateStr] = period.split(' - ');
+    }
+
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+    const periodDays: Date[] = [];
+    for (
+      let date = startDate;
+      date <= endDate;
+      date.setDate(date.getDate() + 1)
+    ) {
+      periodDays.push(new Date(date));
+    }
+    return periodDays;
   }
 
   private isImageFile(file: Express.Multer.File) {

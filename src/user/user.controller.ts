@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   UploadedFile,
@@ -16,6 +17,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { GetUser } from './get-user.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PeriodDto } from './dto/period.dto';
 
 @Controller('users')
 export class UserController {
@@ -58,5 +60,14 @@ export class UserController {
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<void> {
     return this.userService.deleteUser(id);
+  }
+
+  @Post('period/calculate')
+  @UseGuards(JwtAuthGuard)
+  async period(@Body() periodDto: PeriodDto, @GetUser() user: UserModel) {
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return this.userService.period(periodDto, user);
   }
 }
