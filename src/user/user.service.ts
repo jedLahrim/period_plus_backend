@@ -177,7 +177,7 @@ export class UserService {
     } catch (e) {
       throw new ConflictException({
         message: 'Error Period Calculation',
-        error: e,
+        error: e?.message,
       });
     }
   }
