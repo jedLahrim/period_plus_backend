@@ -143,6 +143,30 @@ private getExpirationDuration(expirationTime: string): number {
     }
   }
 
+    async updateParams(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
+    try {
+      await this.findById(id); // Ensure user exists
+      await this.userRepository.update(id, updateUserDto);
+      return await this.findById(id); // Return updated user
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      if (error.code === 'ER_DUP_ENTRY') {
+        // Unique constraint violation
+        throw new BadRequestException('User with this Email already exist');
+      }
+      throw new InternalServerErrorException({
+        message: 'Failed to update user',
+        error: error,
+      });
+    }
+  }
+
+
   // Delete user
   async deleteUser(id: string): Promise<void> {
     try {
