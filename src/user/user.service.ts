@@ -57,32 +57,51 @@ export class UserService {
 
   // Login
   async login(email: string, password: string): Promise<UserModel> {
-    try {
-      const user = await this.findByEmail(email);
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        rethrow(new BadRequestException('Invalid credentials'));
-      }
-      if (!user) {
-        rethrow(new NotFoundException('user not found'));
-      }
-      const accessToken = jwt.sign(
-        { id: user.id },
-        process.env.JWT_SECRET_KEY,
-        {
-          expiresIn: '15d',
-        },
-      );
-
-      user.access = accessToken;
-      return user;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
+  try {
+    const user = await this.findByEmail(email);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
       throw new BadRequestException('Invalid credentials');
     }
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const expirationTime = '15d'; // Token expiration time
+    const accessToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: expirationTime,
+      },
+    );
+
+    // Set the expiration date on the user object
+    user.access = accessToken;
+    user.expirationDate = new Date(Date.now() + this.getExpirationDuration(expirationTime));
+
+    return user;
+  } catch (error) {
+    if (error instanceof NotFoundException) {
+      throw error;
+    }
+    throw new BadRequestException('Invalid credentials');
   }
+}
+
+// Helper method to convert expiration time to milliseconds
+private getExpirationDuration(expirationTime: string): number {
+  const timeUnit = expirationTime.slice(-1); // Get the last character (d, h, m, s)
+  const timeValue = parseInt(expirationTime.slice(0, -1), 10); // Get the numeric value
+
+  switch (timeUnit) {
+    case 'd': return timeValue * 24 * 60 * 60 * 1000; // Days to milliseconds
+    case 'h': return timeValue * 60 * 60 * 1000; // Hours to milliseconds
+    case 'm': return timeValue * 60 * 1000; // Minutes to milliseconds
+    case 's': return timeValue * 1000; // Seconds to milliseconds
+    default: throw new Error('Invalid expiration time unit');
+  }
+}
 
   // Get user by ID
   async findById(id: string): Promise<UserModel> {
