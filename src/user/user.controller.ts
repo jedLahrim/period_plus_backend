@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Patch,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -55,6 +56,14 @@ export class UserController {
     @UploadedFile() profileImageFile: Express.Multer.File,
   ) {
     return this.userService.update(id, updateUserDto, profileImageFile);
+  }
+
+  @Patch(':id')
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.updateParams(id, updateUserDto);
   }
 
   @Delete(':id')
