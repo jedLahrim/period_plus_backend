@@ -30,6 +30,7 @@ export class CreateUserDto {
   avgCycleLength: number = 28; // Default: 28
 
   @IsDate()
+  @IsOptional()
   startDateOfLastPeriod: Date;
 
   @IsInt()
