@@ -29,7 +29,7 @@ export class UserModel {
   @Column('int', { default: 28 }) // Default avg cycle length in days
   avgCycleLength: number;
 
-  @Column('date')
+  @Column('date',{ nullable: 28 })
   startDateOfLastPeriod: Date;
 
   @Column('int', { default: 5 }) // Default duration of the last period in days
