@@ -61,6 +61,8 @@ export class UserModel {
 
   access?: string;
 
+  expirationDate?: Date
+
   @OneToMany(() => Period, (period) => period.user)
   periods: Period[];
 
