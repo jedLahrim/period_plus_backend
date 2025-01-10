@@ -58,8 +58,8 @@ export class UserController {
     return this.userService.update(id, updateUserDto, profileImageFile);
   }
 
-  @Patch(':id')
-  async updateUser(
+  @Post(':id/params')
+  async updateParams(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
