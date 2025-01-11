@@ -8,6 +8,7 @@ import {
   IsUrl,
   Max,
   Min,
+  IsBooleanString,
 } from 'class-validator';
 
 export class CreateUserDto {
