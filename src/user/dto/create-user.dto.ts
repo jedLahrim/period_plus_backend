@@ -42,23 +42,18 @@ export class CreateUserDto {
   @IsUrl()
   profileImageUrl?: string;
 
-  @IsBooleanString()
   @IsOptional()
   dailyMeditation?: boolean;
   
-  @IsBooleanString()
   @IsOptional()
   workoutAlert?: boolean;
 
-  @IsBooleanString()
   @IsOptional()
   hydrationReminder?: boolean;
 
-  @IsBooleanString()
   @IsOptional()
   enableAccountSettings?: boolean;
 
-  @IsBooleanString()
   @IsOptional()
   privateAccount?: boolean;
 }
