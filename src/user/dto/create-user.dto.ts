@@ -28,7 +28,7 @@ export class CreateUserDto {
 
   @IsInt()
   @Min(1)
-  avgCycleLength: number = 28; // Default: 28
+  avgCycleLength: number;
 
   @IsDate()
   @IsOptional()
@@ -36,7 +36,7 @@ export class CreateUserDto {
 
   @IsInt()
   @Min(1)
-  durationOfLastPeriod: number = 5; // Default: 5
+  durationOfLastPeriod: number;
 
   @IsOptional()
   @IsUrl()
