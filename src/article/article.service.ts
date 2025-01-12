@@ -74,7 +74,7 @@ export class ArticleService {
     languageCode: string,
   ): Promise<string> {
     try {
-      const prompt = `Generate an explanation text in this language code: ${languageCode} 
+      const prompt = `Generate an explanation text (600 characters at least) in this language code: ${languageCode} 
       for this text: ${originalText}`;
       const options = {
         method: 'POST',
