@@ -52,6 +52,16 @@ export class ArticleController {
     return this.articleService.getArticleById(id);
   }
 
+  @Get()
+  findAll() {
+    return this.articleService.findAll();
+  }
+
+  @Post('many')
+  createMany() {
+    return this.articleService.createMany();
+  }
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   async updateArticle(

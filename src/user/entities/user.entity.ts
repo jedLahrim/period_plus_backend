@@ -29,10 +29,10 @@ export class UserModel {
   @Column('int', { default: 28 }) // Default avg cycle length in days
   avgCycleLength: number;
 
-  @Column('date',{ nullable: 28 })
+  @Column('date', { nullable: true })
   startDateOfLastPeriod: Date;
 
-  @Column('int', { default: 5 }) // Default duration of the last period in days
+  @Column('int', { default: 5, nullable: true }) // Default duration of the last period in days
   durationOfLastPeriod: number;
 
   @Column({ nullable: true, type: 'text' })
@@ -61,7 +61,7 @@ export class UserModel {
 
   access?: string;
 
-  expirationDate?: Date
+  expirationDate?: Date;
 
   @OneToMany(() => Period, (period) => period.user)
   periods: Period[];

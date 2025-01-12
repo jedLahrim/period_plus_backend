@@ -29,8 +29,8 @@ export class Article {
   updatedAt: Date;
 
   @ManyToOne(() => UserModel, (user) => user.articles, { onDelete: 'CASCADE' })
-  user: UserModel;
+  user?: UserModel;
 
-  @Column()
-  userId: string;
+  @Column({ nullable: true })
+  userId?: string;
 }
