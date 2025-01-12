@@ -182,6 +182,7 @@ private getExpirationDuration(expirationTime: string): number {
   async findOne(user: UserModel) {
     const foundedUser = await this.userRepository.findOne({
       where: { id: user?.id },
+      relations: { periods: true },
     });
     if (!foundedUser) {
       throw new NotFoundException('ERR_NOT_FOUND_USER');
