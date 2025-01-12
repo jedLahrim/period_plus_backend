@@ -8,7 +8,7 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { GenerateSuggestionDto } from '../period/dto/generate-suggestion.dto';
 import { Constant } from '../common/constant';
 import axios from 'axios';
-import { articles } from '../articles';
+// import { articles } from '../articles';
 
 @Injectable()
 export class ArticleService {
@@ -100,16 +100,16 @@ export class ArticleService {
     }
   }
 
-  async createMany(): Promise<Article[]> {
-    const foundedArticles = articles.map((article) => {
-      return this.articleRepository.create({
-        title: article.title,
-        description: article.description,
-        articleImageUrl: article.image,
-      });
-    });
-    return this.articleRepository.save(foundedArticles);
-  }
+  // async createMany(): Promise<Article[]> {
+  //   const foundedArticles = articles.map((article) => {
+  //     return this.articleRepository.create({
+  //       title: article.title,
+  //       description: article.description,
+  //       articleImageUrl: article.image,
+  //     });
+  //   });
+  //   return this.articleRepository.save(foundedArticles);
+  // }
 
   async findAll(): Promise<Article[]> {
     const articles = this.articleRepository
