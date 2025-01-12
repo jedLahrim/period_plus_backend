@@ -57,10 +57,10 @@ export class ArticleController {
     return this.articleService.findAll();
   }
 
-  @Post('many')
-  createMany() {
-    return this.articleService.createMany();
-  }
+  // @Post('many')
+  // createMany() {
+  //   return this.articleService.createMany();
+  // }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
