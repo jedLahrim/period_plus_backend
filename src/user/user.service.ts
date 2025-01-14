@@ -179,16 +179,30 @@ private getExpirationDuration(expirationTime: string): number {
     }
   }
 
-  async findOne(user: UserModel) {
-    const foundedUser = await this.userRepository.findOne({
-      where: { id: user?.id },
-      relations: { periods: true },
-    });
-    if (!foundedUser) {
-      throw new NotFoundException('ERR_NOT_FOUND_USER');
-    }
-    return foundedUser;
+async findOne(user: UserModel): Promise<UserModel> {
+  const foundedUser = await this.userRepository.findOne({
+    where: { id: user?.id },
+    relations: { periods: true },
+  });
+
+  if (!foundedUser) {
+    throw new NotFoundException('ERR_NOT_FOUND_USER');
   }
+
+  const expirationTime = '15d'; // Token expiration time
+  const accessToken = jwt.sign(
+    { id: foundedUser.id },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: expirationTime,
+    },
+  );
+
+  const expirationDate = new Date(Date.now() + this.getExpirationDuration(expirationTime));
+     user.access = accessToken;
+    user.expirationDate = expirationDate;
+  return foundedUser;
+}
 
   async period(periodDto: PeriodDto, user: UserModel) {
     const {
