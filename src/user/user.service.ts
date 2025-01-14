@@ -199,8 +199,8 @@ async findOne(user: UserModel): Promise<UserModel> {
   );
 
   const expirationDate = new Date(Date.now() + this.getExpirationDuration(expirationTime));
-     user.access = accessToken;
-    user.expirationDate = expirationDate;
+     foundedUser.access = accessToken;
+    foundedUser.expirationDate = expirationDate;
   return foundedUser;
 }
 
