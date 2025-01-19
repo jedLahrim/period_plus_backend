@@ -10,7 +10,7 @@ import { UserModel } from '../user/entities/user.entity';
 import { CreatePeriodDto } from './dto/create-period.dto';
 import { UpdatePeriodDto } from './dto/update-period.dto';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
-
+import { randomUUID } from 'crypto';
 @Injectable()
 export class PeriodService {
   constructor(
@@ -35,11 +35,12 @@ export class PeriodService {
       }
 
       const period = this.periodRepository.create({
+        id: randomUUID(),
         ...createPeriodDto,
         user: { id: user.id },
       });
 
-      return await this.periodRepository.save(period);
+      return period;
     } catch (error) {
       throw new BadRequestException(
         'Failed to create period: ' + error.message,
